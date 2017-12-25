@@ -60,3 +60,6 @@ typings/
 # Firebase credentials
 serviceAccount.json
 
+# IDE specifics
+.idea/
+
