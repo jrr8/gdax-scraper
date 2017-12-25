@@ -57,9 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-# Firebase credentials
-serviceAccount.json
-
 # IDE specifics
 .idea/
 
