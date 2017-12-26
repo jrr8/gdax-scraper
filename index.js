@@ -1,4 +1,4 @@
-let webSocket = require('ws');
+let sock = require('ws');
 let firebase = require('firebase');
 let admin = require('firebase-admin');
 
@@ -11,9 +11,14 @@ firebase.initializeApp({
 
 let db = firebase.database().ref();
 
-const ws = new webSocket('wss://ws-feed.gdax.com');
 
-ws.on('open', function() {
+// GDAX socket
+
+const gdax = new sock('wss://ws-feed.gdax.com');
+
+
+gdax.on('open', function() {
+    console.log('gdax connected');
 
     const subscribeData = {
         type: 'subscribe',
@@ -32,8 +37,7 @@ ws.on('open', function() {
 });
 
 
-
-ws.on('message', function(msg) {
+gdax.on('message', function(msg) {
 
     msg = JSON.parse(msg);
 
@@ -43,5 +47,29 @@ ws.on('message', function(msg) {
     
 });
 
+gdax.on('close', function(err, msg) {
+   console.log("GDAX WEBSOCKET CLOSED !!!!: \n", err, msg)
+});
 
-require('express')().listen(process.env.PORT || 3000);
+gdax.on('headers', function(h, r) {
+    console.log("headers received: ")
+});
+
+gdax.on('ping', function(d) {
+    console.log("ping received: ", d)
+});
+
+gdax.on('pong', function(d) {
+    console.log("pong received: ", d)
+});
+
+
+
+// CEX Socket
+
+const cex = new sock('wss://ws.cex.io/ws/');
+
+
+
+// dummy server required for Heroku
+//require('express')().listen(process.env.PORT || 3000);
